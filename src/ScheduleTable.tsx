@@ -182,6 +182,7 @@ const ScheduleTable = ({
       {schedules.map((schedule, index) => (
         <DraggableSchedule
           key={`${schedule.lecture.title}-${index}`}
+          isActive={activeTableId === tableId}
           id={`${tableId}:${index}`}
           data={schedule}
           bg={getColor(schedule.lecture.id)}
@@ -202,7 +203,7 @@ const DraggableSchedule = memo(({
   data,
   bg,
   onDeleteButtonClick,
-}: { id: string; data: Schedule } & ComponentProps<typeof Box> & {
+}: { id: string; data: Schedule; isActive: boolean } & ComponentProps<typeof Box> & {
     onDeleteButtonClick: () => void;
   }) => {
   const { day, range, room, lecture } = data;
@@ -247,6 +248,8 @@ const DraggableSchedule = memo(({
       </PopoverContent>
     </Popover>
   );
+}, (prevProps, nextProps) => {
+  return prevProps.isActive === nextProps.isActive && prevProps.id === nextProps.id;
 });
 
 export default ScheduleTable;
