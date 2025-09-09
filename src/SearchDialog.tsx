@@ -175,6 +175,50 @@ const MajorsForm = memo(
   }
 );
 
+const ResultTableRow = memo(({ lecture, index, addSchedule }: { lecture: Lecture, index: number, addSchedule: (lecture: Lecture) => void }) => {
+  return (
+    <Tr key={`${lecture.id}-${index}`}>
+      <Td width="100px">{lecture.id}</Td>
+      <Td width="50px">{lecture.grade}</Td>
+      <Td width="200px">{lecture.title}</Td>
+      <Td width="50px">{lecture.credits}</Td>
+      <Td
+        width="150px"
+        dangerouslySetInnerHTML={{ __html: lecture.major }}
+      />
+      <Td
+        width="150px"
+        dangerouslySetInnerHTML={{ __html: lecture.schedule }}
+      />
+      <Td width="80px">
+        <Button
+          size="sm"
+          colorScheme="green"
+          onClick={() => addSchedule(lecture)}
+        >
+          추가
+        </Button>
+      </Td>
+    </Tr>
+  )
+}, (prevProps, nextProps) => {
+  return prevProps.lecture.id === nextProps.lecture.id
+});
+
+const ResultTable = memo(({ visibleLectures, addSchedule }: { visibleLectures: Lecture[], addSchedule: (lecture: Lecture) => void }) => {
+  return (
+    <Table size="sm" variant="striped">
+      <Tbody>
+        {visibleLectures.map((lecture, index) => (
+          <ResultTableRow key={`${lecture.id}-${index}`} lecture={lecture} index={index} addSchedule={addSchedule} />
+        ))}
+      </Tbody>
+    </Table>
+  );
+}, (prevProps, nextProps) => {
+  return prevProps.visibleLectures === nextProps.visibleLectures;
+});
+
 // TODO: 이 컴포넌트에서 불필요한 연산이 발생하지 않도록 다양한 방식으로 시도해주세요.
 const SearchDialog = ({ searchInfo, onClose }: Props) => {
   const { setSchedulesMap } = useScheduleContext();
@@ -471,35 +515,7 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
               </Table>
 
               <Box overflowY="auto" maxH="500px" ref={loaderWrapperRef}>
-                <Table size="sm" variant="striped">
-                  <Tbody>
-                    {visibleLectures.map((lecture, index) => (
-                      <Tr key={`${lecture.id}-${index}`}>
-                        <Td width="100px">{lecture.id}</Td>
-                        <Td width="50px">{lecture.grade}</Td>
-                        <Td width="200px">{lecture.title}</Td>
-                        <Td width="50px">{lecture.credits}</Td>
-                        <Td
-                          width="150px"
-                          dangerouslySetInnerHTML={{ __html: lecture.major }}
-                        />
-                        <Td
-                          width="150px"
-                          dangerouslySetInnerHTML={{ __html: lecture.schedule }}
-                        />
-                        <Td width="80px">
-                          <Button
-                            size="sm"
-                            colorScheme="green"
-                            onClick={() => addSchedule(lecture)}
-                          >
-                            추가
-                          </Button>
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
+                <ResultTable visibleLectures={visibleLectures} addSchedule={addSchedule} />
                 <Box ref={loaderRef} h="20px" />
               </Box>
             </Box>
