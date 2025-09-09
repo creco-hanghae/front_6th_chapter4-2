@@ -97,11 +97,15 @@ const withCache = <T extends unknown>(key: string, fn: () => Promise<T>) => {
   };
 };
 
+const withBase = (url: string) => {
+  return `${import.meta.env.BASE_URL}${url}`;
+};
+
 const fetchMajors = withCache("fetchMajors", () =>
-  axios.get<Lecture[]>("/schedules-majors.json")
+  axios.get<Lecture[]>(withBase("/schedules-majors.json"))
 );
 const fetchLiberalArts = withCache("fetchLiberalArts", () =>
-  axios.get<Lecture[]>("/schedules-liberal-arts.json")
+  axios.get<Lecture[]>(withBase("/schedules-liberal-arts.json"))
 );
 
 const fetchAllLectures = async () =>
