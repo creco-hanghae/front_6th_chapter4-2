@@ -493,7 +493,7 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
               </FormControl>
 
               <MajorsForm
-                majors={searchOptions.majors}
+                majors={majors}
                 allMajors={allMajors}
                 changeSearchOption={changeSearchOption}
               />
