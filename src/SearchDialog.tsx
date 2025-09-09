@@ -82,8 +82,23 @@ const TIME_SLOTS = [
 
 const PAGE_SIZE = 100;
 
-const fetchMajors = () => axios.get<Lecture[]>('/schedules-majors.json');
-const fetchLiberalArts = () => axios.get<Lecture[]>('/schedules-liberal-arts.json');
+const withCache = <T, >(key: string, fn: () => Promise<T>) => {
+  const cache: Record<string, any> = {};
+
+  return (): Promise<T> => {
+    if (cache[key]) {
+      console.log('cache hit', key);
+      return cache[key];
+    }
+
+    const result = fn();
+    cache[key] = result;
+    return result;
+  }
+}
+
+const fetchMajors = withCache('fetchMajors', () => axios.get<Lecture[]>('/schedules-majors.json'));
+const fetchLiberalArts = withCache('fetchLiberalArts', () => axios.get<Lecture[]>('/schedules-liberal-arts.json'));
 
 const fetchAllLectures = async () => await Promise.all([
   (console.log('API Call 1', performance.now()), fetchMajors()),
