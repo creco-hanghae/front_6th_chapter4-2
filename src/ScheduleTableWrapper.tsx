@@ -1,8 +1,8 @@
 import { Schedule } from "./types.ts";
 import { Button, ButtonGroup, Flex, Heading, Stack } from "@chakra-ui/react";
-import ScheduleTable from "./ScheduleTable.tsx";
+import ScheduleTable, { TimeInfo } from "./ScheduleTable.tsx";
 import ScheduleDndProvider from "./ScheduleDndProvider.tsx";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
 export const ScheduleTableWrapper = memo(
   ({
@@ -39,6 +39,10 @@ export const ScheduleTableWrapper = memo(
         return { ...prev };
       });
     };
+
+    const onScheduleTimeClick = useCallback((timeInfo: TimeInfo) => {
+      setSearchInfo({ tableId, ...timeInfo });
+    }, [setSearchInfo, tableId]);
 
     return (
       <Stack key={tableId} width="600px">
@@ -77,9 +81,7 @@ export const ScheduleTableWrapper = memo(
             key={`schedule-table-${index}`}
             schedules={schedules}
             tableId={tableId}
-            onScheduleTimeClick={(timeInfo) =>
-              setSearchInfo({ tableId, ...timeInfo })
-            }
+            onScheduleTimeClick={onScheduleTimeClick}
             onDeleteButtonClick={({ day, time }) =>
               setSchedulesMap((prev) => ({
                 ...prev,
