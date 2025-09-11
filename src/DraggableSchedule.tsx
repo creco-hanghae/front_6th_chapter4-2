@@ -69,5 +69,8 @@ export const DraggableSchedule = memo(
         </PopoverContent>
       </Popover>
     );
+  },
+  (prev, next) => {
+    return prev.id === next.id && prev.data === next.data;
   }
 );
