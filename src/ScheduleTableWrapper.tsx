@@ -9,14 +9,13 @@ export const ScheduleTableWrapper = memo(
     tableId,
     schedules,
     index,
-    schedulesMap,
     setSearchInfo,
     setSchedulesMap,
+    disabledRemoveButton
   }: {
     tableId: string;
     schedules: Schedule[];
     index: number;
-    schedulesMap: Record<string, Schedule[]>;
     setSearchInfo: (info: {
       tableId: string;
       day?: string;
@@ -25,9 +24,8 @@ export const ScheduleTableWrapper = memo(
     setSchedulesMap: React.Dispatch<
       React.SetStateAction<Record<string, Schedule[]>>
     >;
+    disabledRemoveButton: boolean;
   }) => {
-    const disabledRemoveButton = Object.keys(schedulesMap).length === 1;
-
     const duplicate = (targetId: string) => {
       setSchedulesMap((prev) => ({
         ...prev,
@@ -71,7 +69,10 @@ export const ScheduleTableWrapper = memo(
             </Button>
           </ButtonGroup>
         </Flex>
-        <ScheduleDndProvider>
+        <ScheduleDndProvider
+          schedules={schedules}
+          setSchedulesMap={setSchedulesMap}
+        >
           <ScheduleTable
             key={`schedule-table-${index}`}
             schedules={schedules}

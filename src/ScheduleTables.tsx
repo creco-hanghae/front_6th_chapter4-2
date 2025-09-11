@@ -21,9 +21,9 @@ export const ScheduleTables = () => {
             tableId={tableId}
             schedules={schedules}
             index={index}
-            schedulesMap={schedulesMap}
             setSearchInfo={setSearchInfo}
             setSchedulesMap={setSchedulesMap}
+            disabledRemoveButton={Object.keys(schedulesMap).length === 1}
           />
         ))}
       </Flex>
